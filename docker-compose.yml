@@ -1,0 +1,25 @@
+version: '3.7'
+
+services:
+  web:
+    build: .
+    command: gunicorn pos.wsgi -b 0.0.0.0:8000
+    environment:
+      - ENVIRONMENT=development
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=True
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - .:/code
+      - .db_data/db.sqlite3:/db.sqlite3
+    ports:
+      - 8000:8000
+  db:
+    image: postgres:11
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment: 
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+volumes:
+  postgres_data:
